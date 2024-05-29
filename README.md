@@ -1,6 +1,6 @@
-Website used as an archive
+Spletna stran narejena za MOS Servis, kjer sem si postavil nekaj ciljev
 ----------------------------
-MAIN GOAL
+CILJ SPLETNE STRANI
   - boljša preglednost
   - podatki iz excela v MySQL
   - dodajanje / brisanje
