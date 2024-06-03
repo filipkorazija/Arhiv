@@ -12,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 <html>
 <head>
     <title>MOS Servis</title>
-    <link rel="stylesheet" type="text/css" href="style.css?v=1.1">
+    <link rel="stylesheet" type="text/css" href="/utils/style.css?v=1.1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>

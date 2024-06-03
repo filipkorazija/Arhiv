@@ -1,8 +1,8 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "MOSServis";
+$servername = "157.90.125.171";
+$username = "sql-arhiv";
+$password = "eWRga4GV2GhC8ffWP5ax";
+$dbname = "arhiv";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

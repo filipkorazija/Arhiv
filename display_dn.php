@@ -11,8 +11,8 @@ if (!isset($_SESSION['username'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MOS Servis</title>
-    <link rel="stylesheet" type="text/css" href="style.css?v=1.1">
+    <title>MOS Servis - Arhiv 1</title>
+    <link rel="stylesheet" type="text/css" href="/utils/style.css?v=1.1">
 </head>
 <body>
     <?php include('nav.php'); ?>

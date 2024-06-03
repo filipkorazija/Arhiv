@@ -1,0 +1,186 @@
+/* Additional styles for new forms */
+.flight-form, .dn-form {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: center;
+}
+
+.flight-form .form-group, .dn-form .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.flight-form .form-group label, .dn-form .form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.flight-form .form-group input, .flight-form .form-group textarea,
+.dn-form .form-group input, .dn-form .form-group textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.flight-form .form-group textarea, .dn-form .form-group textarea {
+    resize: vertical;
+    height: 80px;
+}
+
+.btn-container {
+    grid-column: span 2;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-primary {
+    background-color: #007BFF;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #218838;
+}
+
+.btn-outlook {
+    background-color: #0078d4;
+    color: white;
+}
+
+.btn-outlook:hover {
+    background-color: #0053a6;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    vertical-align: top;
+}
+
+table th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    text-align: center;
+}
+
+table td {
+    background-color: #fff;
+}
+
+table tr:nth-child(even) td {
+    background-color: #f2f2f2;
+}
+
+table th, table td:first-child {
+    border-left: none;
+}
+
+table th, table td:last-child {
+    border-right: none;
+}
+
+table th:first-child, table td:first-child {
+    border-top-left-radius: 8px;
+}
+
+table th:last-child, table td:last-child {
+    border-top-right-radius: 8px;
+}
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 8px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+/* Message Box Styles */
+.message-box {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #ffdddd;
+    color: #d8000c;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Search Form Styles */
+.search-form {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    gap: 10px;
+}
+
+.search-input {
+    flex: 3;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.search-select {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.search-form .btn-primary {
+    border-radius: 4px;
+}
+
+.footer {
+    justify-content: center;
+    padding: 10px 0;
+    margin-top: auto;
+    position: fixed;
+    bottom: 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer p {
+    color: rgb(0, 0, 0);
+    margin: 0;
+}
