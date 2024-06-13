@@ -7,15 +7,13 @@ if (isset($_GET['id'])) {
     // SQL to delete a record
     $sql = "DELETE FROM flights WHERE id = $id";
 
-    if ($conn->query($sql) === TRUE) {
-        echo "Record deleted successfully";
+        if ($conn->query($sql) === TRUE) {
+        $_SESSION['message'] = "Vnos je bil uspesno izbrisan.";
     } else {
-        echo "Error deleting record: " . $conn->error;
+        $_SESSION['error'] = "Napaka pri brisanju vnosa: " . $conn->error;
     }
-
-    $conn->close();
 } else {
-    echo "Invalid request.";
+    $_SESSION['error'] = "Neveljaven ID vnosa.";
 }
 
 header("Location: display_flights.php"); // Adjust this to the correct file name for viewing flights
