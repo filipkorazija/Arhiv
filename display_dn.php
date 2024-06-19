@@ -18,16 +18,74 @@ $offset = ($page - 1) * $limit;
 <head>
     <meta charset="UTF-8">
     <title>MOS Servis - Arhiv Stanovanj</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/utils/style.css?v=1.1">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        .form-input, .form-select, .form-button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+        .form-button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .form-button:hover {
+            background-color: #0056b3;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .page-item {
+            margin: 0 0.25rem;
+        }
+        .page-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #007bff;
+            text-decoration: none;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        .page-link:hover {
+            color: #0056b3;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+        .page-item.active .page-link {
+            z-index: 1;
+            color: white;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .alert-warning {
+            background-color: #ffebcc;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <?php include('nav.php'); ?>
-    <div class="container mt-5">
-        <h2 class="text-center">Arhiv stanovanj</h2>
+    <div class="container mx-auto mt-5">
+        <h2 class="text-center text-2xl font-bold mb-4">Arhiv stanovanj</h2>
         <!-- Search Form -->
-        <form method="GET" action="display_dn.php" class="search-form mb-3">
+        <form method="GET" action="display_dn.php" class="search-form mb-5">
             <?php
             $search = isset($_GET['search']) ? $_GET['search'] : '';
             $country = isset($_GET['country']) ? $_GET['country'] : '';
@@ -35,24 +93,23 @@ $offset = ($page - 1) * $limit;
             $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
             $filter_by = isset($_GET['filter_by']) ? $_GET['filter_by'] : 'all';
             ?>
-            <div class="row justify-content-center g-4">
-                <div class="col-md-3 col-sm-6">
-                    <input type="text" name="search" placeholder="Ključne besede" value="<?php echo htmlspecialchars($search); ?>" class="form-control">
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="w-full md:w-1/4">
+                    <input type="text" name="search" placeholder="Ključne besede" value="<?php echo htmlspecialchars($search); ?>" class="form-input">
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="w-full md:w-1/4">
                     <select name="filter_by" class="form-select">
                         <option value="all" <?php echo $filter_by == 'all' ? 'selected' : ''; ?>>Vsi filtri</option>
-                        <option value="dn" <?php echo $filter_by == 'dn' ? 'selected' : ''; ?>>DN</option>
+                        <option value="dn" <?php echo $filter_by == 'dn' ? 'selected' : ''; ?>>DN + VP</option>
                         <option value="naslov_stanovanja" <?php echo $filter_by == 'naslov_stanovanja' ? 'selected' : ''; ?>>Naslov Stanovanja</option>
                         <option value="postna_st" <?php echo $filter_by == 'postna_st' ? 'selected' : ''; ?>>Poštna Št.</option>
                         <option value="kontakt" <?php echo $filter_by == 'kontakt' ? 'selected' : ''; ?>>Kontakt</option>
                         <option value="imena" <?php echo $filter_by == 'imena' ? 'selected' : ''; ?>>Št. oseb</option>
                         <option value="cena_oseba_dan" <?php echo $filter_by == 'cena_oseba_dan' ? 'selected' : ''; ?>>Cena na dan</option>
-                        <option value="st_racuna" <?php echo $filter_by == 'st_racuna' ? 'selected' : ''; ?>>Št. Računa</option>
                         <option value="opombe" <?php echo $filter_by == 'opombe' ? 'selected' : ''; ?>>Opombe</option>
                     </select>
                 </div>
-                <div class="col-md-3 col-sm-6">
+                <div class="w-full md:w-1/4">
                     <select name="country" class="form-select">
                         <option value="">Vse Države</option>
                         <option value="Anglija" <?php echo $country == 'Anglija' ? 'selected' : ''; ?>>Anglija</option>
@@ -81,64 +138,88 @@ $offset = ($page - 1) * $limit;
                         <option value="ZDA" <?php echo $country == 'ZDA' ? 'selected' : ''; ?>>ZDA</option>
                     </select>
                 </div>
-                <div class="col-md-3 col-sm-1">
-                    <button type="submit" class="btn btn-primary w-100" style="height: 40px;">Search</button>
+                <div class="w-full md:w-1/4">
+                    <button type="submit" class="form-button">Search</button>
                 </div>
             </div>
         </form>
         <?php
+        
+        // Revised
         include('db.php');
-
+        
         // Base SQL query
         $sql = "SELECT * FROM delovni_nalog";
-
-        // Modify SQL query to include search condition if keywords are provided
+        
+        // Initialize an array to hold the conditions and parameters
         $conditions = [];
+        $params = [];
+        $types = '';
+        
+        // Modify SQL query to include search condition if keywords are provided
         if ($search) {
-            $escaped_search = $conn->real_escape_string($search);
+            $escaped_search = '%' . $search . '%';
             if ($filter_by == 'all') {
-                $conditions[] = "(dn LIKE '%$escaped_search%' OR 
-                                 naslov_stanovanja LIKE '%$escaped_search%' OR 
-                                 postna_st LIKE '%$escaped_search%' OR 
-                                 kontakt LIKE '%$escaped_search%' OR 
-                                 imena LIKE '%$escaped_search%' OR 
-                                 cena_oseba_dan LIKE '%$escaped_search%' OR 
-                                 st_racuna LIKE '%$escaped_search%' OR 
-                                 opombe LIKE '%$escaped_search%')";
+                $conditions[] = "(dn LIKE ? OR 
+                                 naslov_stanovanja LIKE ? OR 
+                                 postna_st LIKE ? OR 
+                                 kontakt LIKE ? OR 
+                                 imena LIKE ? OR 
+                                 cena_oseba_dan LIKE ? OR 
+                                 st_racuna LIKE ? OR 
+                                 opombe LIKE ?)";
+                $params = array_fill(0, 8, $escaped_search);
+                $types .= str_repeat('s', 8);
             } else {
-                $conditions[] = "$filter_by LIKE '%$escaped_search%'";
+                $conditions[] = "$filter_by LIKE ?";
+                $params[] = $escaped_search;
+                $types .= 's';
             }
         }
         if ($country) {
-            $escaped_country = $conn->real_escape_string($country);
-            $conditions[] = "country = '$escaped_country'";
+            $conditions[] = "country = ?";
+            $params[] = $country;
+            $types .= 's';
         }
-
+        
         // Join conditions with AND to ensure all conditions are met
         if (count($conditions) > 0) {
             $sql .= " WHERE " . implode(' AND ', $conditions);
         }
-
+        
         // Add sorting
         $sql .= " ORDER BY $sort_column $sort_order";
-
-        // Get total number of records
-        $total_result = $conn->query($sql);
+        
+        // Prepare statement for total records count
+        $stmt = $conn->prepare($sql);
+        if ($types) {
+            $stmt->bind_param($types, ...$params);
+        }
+        $stmt->execute();
+        $total_result = $stmt->get_result();
         $total_records = $total_result->num_rows;
-
+        
         // Add limit and offset for pagination
-        $sql .= " LIMIT $limit OFFSET $offset";
+        $sql .= " LIMIT ? OFFSET ?";
+        $params[] = $limit;
+        $params[] = $offset;
+        $types .= 'ii';
+        
+        // Prepare statement for the main query with limit and offset
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        $result = $conn->query($sql);
-
+        
         // Function to toggle sort order
         function toggle_sort_order($current_order) {
             return $current_order === 'ASC' ? 'DESC' : 'ASC';
         }
-
+        
         // Determine the next sort order for each column
         $next_sort_order = toggle_sort_order($sort_order);
-
+        
         // Function to get sort icon
         function get_sort_icon($column, $current_column, $current_order) {
             if ($column === $current_column) {
@@ -148,38 +229,40 @@ $offset = ($page - 1) * $limit;
         }
 
         if ($result->num_rows > 0) {
-            echo "<div class='table-responsive'><table class='table table-striped table-bordered'>
+            echo "<div class='overflow-x-auto'><table class='min-w-full bg-white border-collapse'>
                     <thead>
                         <tr>
-                            <th><a href='?sort_column=dn&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>DN " . get_sort_icon('dn', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=naslov_stanovanja&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Naslov Stanovanja " . get_sort_icon('naslov_stanovanja', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=postna_st&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Poštna Št. " . get_sort_icon('postna_st', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=kontakt&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Kontakt " . get_sort_icon('kontakt', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=imena&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Št. oseb " . get_sort_icon('imena', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=cena_oseba_dan&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Cena na dan " . get_sort_icon('cena_oseba_dan', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=st_racuna&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Št. Računa " . get_sort_icon('st_racuna', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=opombe&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Opombe " . get_sort_icon('opombe', $sort_column, $sort_order) . "</a></th>
-                            <th>Akcije</th>
+                            <th class='border px-4 py-2'><a href='?sort_column=dn&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>DN + VP" . get_sort_icon('dn', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=naslov_stanovanja&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Naslov Stanovanja " . get_sort_icon('naslov_stanovanja', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=postna_st&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Poštna Št. " . get_sort_icon('postna_st', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=kontakt&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Kontakt " . get_sort_icon('kontakt', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=imena&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Št. oseb " . get_sort_icon('imena', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=cena_oseba_dan&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Cena na dan " . get_sort_icon('cena_oseba_dan', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=opombe&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Opombe " . get_sort_icon('opombe', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=country&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Država " . get_sort_icon('country', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'>Akcije</th>
                         </tr>
                     </thead>
                     <tbody>";
             while($row = $result->fetch_assoc()) {
                 echo "<tr data-id='".$row["id"]."'>
-                        <td class='editable' data-field='dn'>".$row["dn"]."</td>
-                        <td class='editable' data-field='naslov_stanovanja'>".$row["naslov_stanovanja"]."</td>
-                        <td class='editable' data-field='postna_st'>".$row["postna_st"]."</td>
-                        <td class='editable' data-field='kontakt'>".$row["kontakt"]."</td>
-                        <td class='editable' data-field='imena'>".$row["imena"]."</td>
-                        <td class='editable' data-field='cena_oseba_dan'>".$row["cena_oseba_dan"]."</td>
-                        <td class='editable' data-field='st_racuna'>".$row["st_racuna"]."</td>
-                        <td class='editable' data-field='opombe'>".$row["opombe"]."</td>
-                        <td>
-                            <button class='btn btn-primary btn-sm edit-btn'>Edit</button>
-                            <a href='delete_dn.php?id=".$row["id"]."' onclick=\"return confirm('POZOR! Ali ste prepričani za želite izbrisati ta vnos?');\" class='btn btn-danger btn-sm'>Delete</a>
+                        <td class='border px-4 py-2 editable' data-field='dn'>".$row["dn"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='naslov_stanovanja'>".$row["naslov_stanovanja"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='postna_st'>".$row["postna_st"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='kontakt'>".$row["kontakt"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='imena'>".$row["imena"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='cena_oseba_dan'>".$row["cena_oseba_dan"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='opombe'>".$row["opombe"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='country'>".$row["country"]."</td>
+                        <td class='border px-4 py-2'>
+                            <button class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded edit-btn'>Edit</button>
+                            <a href='delete_dn.php?id=".$row["id"]."' onclick=\"return confirm('POZOR! Ali ste prepričani za želite izbrisati ta vnos?');\" class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Delete</a>
                         </td>
                       </tr>";
             }
             echo "</tbody></table></div>";
+
+            echo "<div class='flex justify-center items-center mt-4'>";
 
             // Pagination logic
             $total_pages = ceil($total_records / $limit);
@@ -192,7 +275,7 @@ $offset = ($page - 1) * $limit;
             }
 
             echo '<nav>';
-            echo '<ul class="pagination justify-content-center">';
+            echo '<ul class="pagination flex justify-center mb-0">';
 
             // First and Previous arrows
             if ($page > 1) {
@@ -215,14 +298,41 @@ $offset = ($page - 1) * $limit;
 
             echo '</ul>';
             echo '</nav>';
+            echo '</div>';
         } else {
-            echo "<div class='alert alert-warning'>Podatki z temi parametri ne obstajajo!</div>";
+            echo "<div class='alert-warning'>Podatki z temi parametri ne obstajajo!</div>";
         }
         $conn->close();
         ?>
     </div>
     <?php include('footer.php'); ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    <script>
+    document.getElementById('navbar-toggler').onclick = function () {
+        var navDropdown = document.getElementById('navbarNavDropdown');
+        if (navDropdown.classList.contains('hidden')) {
+            navDropdown.classList.remove('hidden');
+        } else {
+            navDropdown.classList.add('hidden');
+        }
+    };
+
+    // Handle dropdown delay
+    document.querySelectorAll('.dropdown').forEach(function(dropdown) {
+        dropdown.addEventListener('mouseenter', function() {
+            var dropdownMenu = this.querySelector('.dropdown-menu');
+            dropdownMenu.classList.remove('hidden');
+        });
+
+        dropdown.addEventListener('mouseleave', function() {
+            var dropdownMenu = this.querySelector('.dropdown-menu');
+            setTimeout(function() {
+                dropdownMenu.classList.add('hidden');
+            }, 300); // Adjust the delay as needed
+        });
+    });
+</script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
     document.querySelectorAll('.edit-btn').forEach(button => {
@@ -233,7 +343,7 @@ $offset = ($page - 1) * $limit;
                 row.querySelectorAll('.editable').forEach(cell => {
                     const field = cell.getAttribute('data-field');
                     const value = cell.textContent;
-                    cell.innerHTML = `<input type="text" class="form-control" name="${field}" value="${value}">`;
+                    cell.innerHTML = `<input type="text" class="form-input w-full" name="${field}" value="${value}">`;
                 });
             } else {
                 const id = row.getAttribute('data-id');
@@ -267,5 +377,6 @@ $offset = ($page - 1) * $limit;
     });
 });
     </script>
+    
 </body>
 </html>

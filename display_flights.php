@@ -18,28 +18,86 @@ $offset = ($page - 1) * $limit;
 <head>
     <meta charset="UTF-8">
     <title>MOS Servis - Arhiv Letov</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/utils/style.css?v=1.1">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+        .form-input, .form-select, .form-button {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+        }
+        .form-button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .form-button:hover {
+            background-color: #0056b3;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .page-item {
+            margin: 0 0.25rem;
+        }
+        .page-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #007bff;
+            text-decoration: none;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        .page-link:hover {
+            color: #0056b3;
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+        }
+        .page-item.active .page-link {
+            z-index: 1;
+            color: white;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .alert-warning {
+            background-color: #ffebcc;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <?php include('nav.php'); ?>
-    <div class="container mt-5">
-        <h2 class="text-center">Arhiv letov</h2>
+    <div class="container mx-auto mt-5">
+        <h2 class="text-center text-2xl font-bold mb-4">Arhiv letov</h2>
         <!-- Search Form -->
-        <form method="GET" action="display_flights.php" class="mb-3">
+        <form method="GET" action="display_flights.php" class="search-form mb-5">
             <?php
             $search = isset($_GET['search']) ? $_GET['search'] : '';
             $country = isset($_GET['country']) ? $_GET['country'] : '';
-            $filter_by = isset($_GET['filter_by']) ? $_GET['filter_by'] : 'all';
             $sort_column = isset($_GET['sort_column']) ? $_GET['sort_column'] : 'name';
             $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'ASC';
+            $filter_by = isset($_GET['filter_by']) ? $_GET['filter_by'] : 'all';
             ?>
-            <div class="row justify-content-center g-4">
-                <div class="col-md-4">
-                    <input type="text" name="search" placeholder="Ključne besede" value="<?php echo htmlspecialchars($search); ?>" class="form-control">
+            <div class="flex flex-wrap justify-center gap-4">
+                <div class="w-full md:w-1/4">
+                    <input type="text" name="search" placeholder="Ključne besede" value="<?php echo htmlspecialchars($search); ?>" class="form-input">
                 </div>
-                <div class="col-md-3">
+                <div class="w-full md:w-1/4">
                     <select name="filter_by" class="form-select">
                         <option value="all" <?php echo $filter_by == 'all' ? 'selected' : ''; ?>>Vsi stolpci</option>
                         <option value="name" <?php echo $filter_by == 'name' ? 'selected' : ''; ?>>Ime in priimek</option>
@@ -53,21 +111,24 @@ $offset = ($page - 1) * $limit;
                         <option value="note" <?php echo $filter_by == 'note' ? 'selected' : ''; ?>>Opomba</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="w-full md:w-1/4">
                     <select name="country" class="form-select">
                         <option value="">Vse Države</option>
                         <option value="AT-Dunaj" <?php echo $country == 'AT-Dunaj' ? 'selected' : ''; ?>>AT - Dunaj</option>
                         <option value="AT-Graz" <?php echo $country == 'AT-Graz' ? 'selected' : ''; ?>>AT - Graz</option>
+                        <option value="SI-Ljubljana" <?php echo $country == 'SI-Ljubljana' ? 'selected' : ''; ?>>SI - Ljubljana</option>
                         <option value="HR-Zagreb" <?php echo $country == 'HR-Zagreb' ? 'selected' : ''; ?>>HR - Zagreb</option>
                         <option value="CA-Toronto" <?php echo $country == 'CA-Toronto' ? 'selected' : ''; ?>>CA - Toronto</option>
                         <option value="CA-Montreal" <?php echo $country == 'CA-Montreal' ? 'selected' : ''; ?>>CA - Montreal</option>
                         <option value="DE-Frankfurt" <?php echo $country == 'DE-Frankfurt' ? 'selected' : ''; ?>>DE - Frankfurt</option>
                         <option value="US-Greenville" <?php echo $country == 'US-Greenville' ? 'selected' : ''; ?>>US - Greenville SC</option>
                         <option value="US-Guatemala" <?php echo $country == 'US-Guatemala' ? 'selected' : ''; ?>>US - Guatemala</option>
+                        <option value="US-Memphis" <?php echo $country == 'US-Memphis' ? 'selected' : ''; ?>>US - Memphis</option>
+                        <option value="US-Chicago" <?php echo $country == 'US-Chicago' ? 'selected' : ''; ?>>US - Chicago</option>
                     </select>
                 </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                <div class="w-full md:w-1/4">
+                    <button type="submit" class="form-button">Search</button>
                 </div>
             </div>
         </form>
@@ -142,40 +203,42 @@ $offset = ($page - 1) * $limit;
         }
 
         if ($result->num_rows > 0) {
-            echo "<div class='table-responsive'><table class='table table-striped table-bordered'>
+            echo "<div class='overflow-x-auto'><table class='min-w-full bg-white border-collapse'>
                     <thead>
                         <tr>
-                            <th><a href='?sort_column=name&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Ime in priimek " . get_sort_icon('name', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=departure_airport&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Letališče odhoda " . get_sort_icon('departure_airport', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=departure_date&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Datum odhoda " . get_sort_icon('departure_date', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=departure_time&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Ura odhoda " . get_sort_icon('departure_time', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=arrival_airport&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Letališče prihoda " . get_sort_icon('arrival_airport', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=arrival_date&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Datum prihoda " . get_sort_icon('arrival_date', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=arrival_time&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Ura pristanka " . get_sort_icon('arrival_time', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=flight_type&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Tip leta " . get_sort_icon('flight_type', $sort_column, $sort_order) . "</a></th>
-                            <th><a href='?sort_column=note&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Opomba " . get_sort_icon('note', $sort_column, $sort_order) . "</a></th>
-                            <th>Akcije</th>
+                            <th class='border px-4 py-2'><a href='?sort_column=name&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Ime in priimek " . get_sort_icon('name', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=departure_airport&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Letališče odhoda " . get_sort_icon('departure_airport', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=departure_date&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Datum odhoda " . get_sort_icon('departure_date', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=departure_time&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Ura odhoda " . get_sort_icon('departure_time', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=arrival_airport&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Letališče prihoda " . get_sort_icon('arrival_airport', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=arrival_date&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Datum prihoda " . get_sort_icon('arrival_date', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=arrival_time&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Ura pristanka " . get_sort_icon('arrival_time', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=flight_type&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Tip leta " . get_sort_icon('flight_type', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'><a href='?sort_column=note&sort_order=$next_sort_order&search=" . urlencode($search) . "&country=" . urlencode($country) . "&filter_by=$filter_by'>Opomba " . get_sort_icon('note', $sort_column, $sort_order) . "</a></th>
+                            <th class='border px-4 py-2'>Akcije</th>
                         </tr>
                     </thead>
                     <tbody>";
             while($row = $result->fetch_assoc()) {
                 echo "<tr data-id='".$row["id"]."'>
-                        <td class='editable' data-field='name'>".$row["name"]."</td>
-                        <td class='editable' data-field='departure_airport'>".$row["departure_airport"]."</td>
-                        <td class='editable' data-field='departure_date'>".$row["departure_date"]."</td>
-                        <td class='editable' data-field='departure_time'>".$row["departure_time"]."</td>
-                        <td class='editable' data-field='arrival_airport'>".$row["arrival_airport"]."</td>
-                        <td class='editable' data-field='arrival_date'>".$row["arrival_date"]."</td>
-                        <td class='editable' data-field='arrival_time'>".$row["arrival_time"]."</td>
-                        <td class='editable' data-field='flight_type'>".$row["flight_type"]."</td>
-                        <td class='editable' data-field='note'>".$row["note"]."</td>
-                        <td>
-                            <button class='btn btn-primary btn-sm edit-btn'>Edit</button>
-                            <a href='delete_flight.php?id=".$row["id"]."' onclick=\"return confirm('POZOR! Ali ste prepričani za želite izbrisati ta vnos?');\" class='btn btn-danger btn-sm'>Izbriši</a>
+                        <td class='border px-4 py-2 editable' data-field='name'>".$row["name"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='departure_airport'>".$row["departure_airport"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='departure_date'>".$row["departure_date"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='departure_time'>".$row["departure_time"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='arrival_airport'>".$row["arrival_airport"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='arrival_date'>".$row["arrival_date"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='arrival_time'>".$row["arrival_time"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='flight_type'>".$row["flight_type"]."</td>
+                        <td class='border px-4 py-2 editable' data-field='note'>".$row["note"]."</td>
+                        <td class='border px-4 py-2'>
+                            <button class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded edit-btn'>Edit</button>
+                            <a href='delete_flight.php?id=".$row["id"]."' onclick=\"return confirm('POZOR! Ali ste prepričani za želite izbrisati ta vnos?');\" class='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Delete</a>
                         </td>
                       </tr>";
             }
             echo "</tbody></table></div>";
+
+            echo "<div class='flex justify-center items-center mt-4'>";
 
             // Pagination logic
             $total_pages = ceil($total_records / $limit);
@@ -188,81 +251,81 @@ $offset = ($page - 1) * $limit;
             }
 
             echo '<nav>';
-            echo '<ul class="pagination justify-content-center">';
+            echo '<ul class="pagination flex justify-center mb-0">';
 
             // First and Previous arrows
             if ($page > 1) {
-                echo '<li class="page-item"><a class="page-link" href="?page=1&search='.urlencode($search).'&country='.urlencode($country).'&sort_column='.$sort_column.'&sort_order='.$sort_order.'&filter_by='.$filter_by.'" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a></li>';
-                echo '<li class="page-item"><a class="page-link" href="?page='.($page-1).'&search='.urlencode($search).'&country='.urlencode($country).'&sort_column='.$sort_column.'&sort_order='.$sort_order.'&filter_by='.$filter_by.'" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+                echo '<li class="page-item"><a class="page-link" href="?page=1&search='.urlencode($search).'&country='.urlencode($country).'&filter_by='.$filter_by.'&sort_column='.$sort_column.'&sort_order='.$sort_order.'" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a></li>';
+                echo '<li class="page-item"><a class="page-link" href="?page='.($page-1).'&search='.urlencode($search).'&country='.urlencode($country).'&filter_by='.$filter_by.'&sort_column='.$sort_column.'&sort_order='.$sort_order.'" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
             }
 
             // Pagination links
             for ($i = $start_page; $i <= $end_page; $i++) {
                 echo '<li class="page-item'.($i == $page ? ' active' : '').'">';
-                echo '<a class="page-link" href="?page='.$i.'&search='.urlencode($search).'&country='.urlencode($country).'&sort_column='.$sort_column.'&sort_order='.$sort_order.'&filter_by='.$filter_by.'">'.$i.'</a>';
+                echo '<a class="page-link" href="?page='.$i.'&search='.urlencode($search).'&country='.urlencode($country).'&filter_by='.$filter_by.'&sort_column='.$sort_column.'&sort_order='.$sort_order.'">'.$i.'</a>';
                 echo '</li>';
             }
 
             // Next and Last arrows
             if ($page < $total_pages) {
-                echo '<li class="page-item"><a class="page-link" href="?page='.($page+1).'&search='.urlencode($search).'&country='.urlencode($country).'&sort_column='.$sort_column.'&sort_order='.$sort_order.'&filter_by='.$filter_by.'" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
-                echo '<li class="page-item"><a class="page-link" href="?page='.$total_pages.'&search='.urlencode($search).'&country='.urlencode($country).'&sort_column='.$sort_column.'&sort_order='.$sort_order.'&filter_by='.$filter_by.'" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a></li>';
+                echo '<li class="page-item"><a class="page-link" href="?page='.($page+1).'&search='.urlencode($search).'&country='.urlencode($country).'&filter_by='.$filter_by.'&sort_column='.$sort_column.'&sort_order='.$sort_order.'" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+                echo '<li class="page-item"><a class="page-link" href="?page='.$total_pages.'&search='.urlencode($search).'&country='.urlencode($country).'&filter_by='.$filter_by.'&sort_column='.$sort_column.'&sort_order='.$sort_order.'" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a></li>';
             }
 
             echo '</ul>';
             echo '</nav>';
+            echo '</div>';
         } else {
-            echo "<div class='alert alert-warning'>Podatki z temi parametri ne obstajajo!</div>";
+            echo "<div class='alert-warning'>Podatki z temi parametri ne obstajajo!</div>";
         }
         $conn->close();
         ?>
     </div>
     <?php include('footer.php'); ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('.edit-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            if (this.textContent === 'Edit') {
-                this.textContent = 'Save';
-                row.querySelectorAll('.editable').forEach(cell => {
-                    const field = cell.getAttribute('data-field');
-                    const value = cell.textContent;
-                    cell.innerHTML = `<input type="text" class="form-control" name="${field}" value="${value}">`;
-                });
-            } else {
-                const id = row.getAttribute('data-id');
-                const data = {};
-                row.querySelectorAll('.editable input').forEach(input => {
-                    const field = input.getAttribute('name');
-                    data[field] = input.value;
-                });
-                fetch(`update_flight.php?id=${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const row = this.closest('tr');
+                    if (this.textContent === 'Edit') {
+                        this.textContent = 'Save';
                         row.querySelectorAll('.editable').forEach(cell => {
                             const field = cell.getAttribute('data-field');
-                            cell.textContent = data.data[field];
+                            const value = cell.textContent;
+                            cell.innerHTML = `<input type="text" class="form-input w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500" name="${field}" value="${value}">`;
                         });
-                        this.textContent = 'Edit';
                     } else {
-                        alert('Error updating data: ' + data.message);
+                        const id = row.getAttribute('data-id');
+                        const data = {};
+                        row.querySelectorAll('.editable input').forEach(input => {
+                            const field = input.getAttribute('name');
+                            data[field] = input.value;
+                        });
+                        fetch(`update_flight.php?id=${id}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                row.querySelectorAll('.editable').forEach(cell => {
+                                    const field = cell.getAttribute('data-field');
+                                    cell.textContent = data.data[field];
+                                });
+                                this.textContent = 'Edit';
+                            } else {
+                                alert('Error updating data: ' + data.message);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
                     }
-                })
-                .catch(error => console.error('Error:', error));
-            }
+                });
+            });
         });
-    });
-});
-
     </script>
 </body>
 </html>
