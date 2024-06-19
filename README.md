@@ -8,3 +8,5 @@ CILJ SPLETNE STRANI
   - shranjeno v MariaDB
   - uporabljen PHP za funkcije
   - za izgled pa Tailwind CSS
+
+Število vrstic kode: 2,312
